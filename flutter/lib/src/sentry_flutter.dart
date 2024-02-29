@@ -39,6 +39,7 @@ mixin SentryFlutter {
     @internal MethodChannel channel = _channel,
     @internal PlatformChecker? platformChecker,
     @internal RendererWrapper? rendererWrapper,
+    Integration? customBinding,
   }) async {
     final flutterOptions = SentryFlutterOptions();
 
@@ -74,6 +75,7 @@ mixin SentryFlutter {
       channel,
       flutterOptions,
       isOnErrorSupported,
+      customBinding
     );
     for (final defaultIntegration in defaultIntegrations) {
       flutterOptions.addIntegration(defaultIntegration);
@@ -129,13 +131,18 @@ mixin SentryFlutter {
     MethodChannel channel,
     SentryFlutterOptions options,
     bool isOnErrorSupported,
+    Integration? customBinding,
   ) {
     final integrations = <Integration>[];
     final platformChecker = options.platformChecker;
     final platform = platformChecker.platform;
 
     // Will call WidgetsFlutterBinding.ensureInitialized() before all other integrations.
-    integrations.add(WidgetsFlutterBindingIntegration());
+    if(customBinding != null) {
+      integrations.add(customBinding);
+    } else {
+      integrations.add(WidgetsFlutterBindingIntegration());
+    }
 
     // Use PlatformDispatcher.onError instead of zones.
     if (isOnErrorSupported) {
