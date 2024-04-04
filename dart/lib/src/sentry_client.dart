@@ -17,6 +17,7 @@ import 'sentry_stack_trace_factory.dart';
 import 'transport/http_transport.dart';
 import 'transport/noop_transport.dart';
 import 'transport/spotlight_http_transport.dart';
+import 'transport/task_queue.dart';
 import 'utils/isolate_utils.dart';
 import 'version.dart';
 import 'sentry_envelope.dart';
@@ -24,7 +25,7 @@ import 'client_reports/client_report_recorder.dart';
 import 'client_reports/discard_reason.dart';
 import 'transport/data_category.dart';
 
-/// Default value for [User.ipAddress]. It gets set when an event does not have
+/// Default value for [SentryUser.ipAddress]. It gets set when an event does not have
 /// a user and IP address. Only applies if [SentryOptions.sendDefaultPii] is set
 /// to true.
 const _defaultIpAddress = '{{auto}}';
@@ -32,6 +33,10 @@ const _defaultIpAddress = '{{auto}}';
 /// Logs crash reports and events to the Sentry.io service.
 class SentryClient {
   final SentryOptions _options;
+  late final _taskQueue = TaskQueue<SentryId?>(
+    _options.maxQueueSize,
+    _options.logger,
+  );
 
   final Random? _random;
 
@@ -514,6 +519,9 @@ class SentryClient {
   Future<SentryId?> _attachClientReportsAndSend(SentryEnvelope envelope) {
     final clientReport = _options.recorder.flush();
     envelope.addClientReport(clientReport);
-    return _options.transport.send(envelope);
+    return _taskQueue.enqueue(
+      () => _options.transport.send(envelope),
+      SentryId.empty(),
+    );
   }
 }

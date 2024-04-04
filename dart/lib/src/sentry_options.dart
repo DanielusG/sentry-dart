@@ -81,6 +81,20 @@ class SentryOptions {
     _maxSpans = maxSpans;
   }
 
+  int _maxQueueSize = 30;
+
+  /// Returns the max number of events Sentry will send when calling capture
+  /// methods in a tight loop. Default is 30.
+  int get maxQueueSize => _maxQueueSize;
+
+  /// Sets how many unawaited events can be sent by Sentry. (e.g. capturing
+  /// events in a tight loop) at once. If you need to send more, please use the
+  /// await keyword.
+  set maxQueueSize(int count) {
+    assert(count > 0);
+    _maxQueueSize = count;
+  }
+
   /// Configures up to which size request bodies should be included in events.
   /// This does not change whether an event is captured.
   MaxRequestBodySize maxRequestBodySize = MaxRequestBodySize.never;
@@ -248,11 +262,13 @@ class SentryOptions {
   /// - In an browser environment this can be requests which fail because of CORS.
   /// - In an mobile or desktop application this can be requests which failed
   ///   because the connection was interrupted.
-  /// Use with [SentryHttpClient] or `sentry_dio` integration for this to work
+  /// Use with [SentryHttpClient] or `sentry_dio` integration for this to work,
+  /// or iOS native where it sets the value to `enableCaptureFailedRequests`.
   bool captureFailedRequests = true;
 
   /// Whether to records requests as breadcrumbs. This is on by default.
-  /// It only has an effect when the SentryHttpClient or dio integration is in use
+  /// It only has an effect when the SentryHttpClient or dio integration is in
+  /// use, or iOS native where it sets the value to `enableNetworkBreadcrumbs`.
   bool recordHttpBreadcrumbs = true;
 
   /// Whether [SentryEvent] deduplication is enabled.
