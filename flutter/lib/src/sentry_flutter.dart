@@ -8,6 +8,7 @@ import '../sentry_flutter.dart';
 import 'event_processor/android_platform_exception_event_processor.dart';
 import 'event_processor/flutter_exception_event_processor.dart';
 import 'event_processor/platform_exception_event_processor.dart';
+import 'event_processor/widget_event_processor.dart';
 import 'frame_callback_handler.dart';
 import 'integrations/connectivity/connectivity_integration.dart';
 import 'integrations/screenshot_integration.dart';
@@ -33,6 +34,11 @@ typedef FlutterOptionsConfiguration = FutureOr<void> Function(
 mixin SentryFlutter {
   static const _channel = MethodChannel('sentry_flutter');
 
+  /// Represents the time when the Sentry init set up has started.
+  @internal
+  // ignore: invalid_use_of_internal_member
+  static DateTime? sentrySetupStartTime;
+
   static Future<void> init(
     FlutterOptionsConfiguration optionsConfiguration, {
     AppRunner? appRunner,
@@ -42,6 +48,9 @@ mixin SentryFlutter {
     Integration? customBinding,
   }) async {
     final flutterOptions = SentryFlutterOptions();
+
+    // ignore: invalid_use_of_internal_member
+    sentrySetupStartTime ??= flutterOptions.clock();
 
     if (platformChecker != null) {
       flutterOptions.platformChecker = platformChecker;
@@ -112,12 +121,13 @@ mixin SentryFlutter {
       options.addScopeObserver(NativeScopeObserver(_native!));
     }
 
-    var flutterEventProcessor = FlutterEnricherEventProcessor(options);
-    options.addEventProcessor(flutterEventProcessor);
+    options.addEventProcessor(FlutterEnricherEventProcessor(options));
+    options.addEventProcessor(WidgetEventProcessor());
 
     if (options.platformChecker.platform.isAndroid) {
-      options
-          .addEventProcessor(AndroidPlatformExceptionEventProcessor(options));
+      options.addEventProcessor(
+        AndroidPlatformExceptionEventProcessor(options),
+      );
     }
 
     options.addEventProcessor(PlatformExceptionEventProcessor());
@@ -158,14 +168,14 @@ mixin SentryFlutter {
     // The ordering here matters, as we'd like to first start the native integration.
     // That allow us to send events to the network and then the Flutter integrations.
     // Flutter Web doesn't need that, only Android and iOS.
-    if (platformChecker.hasNativeIntegration) {
-      integrations.add(NativeSdkIntegration(channel));
+    if (_native != null) {
+      integrations.add(NativeSdkIntegration(_native!));
     }
 
     // Will enrich events with device context, native packages and integrations
     if (platformChecker.hasNativeIntegration &&
         !platformChecker.isWeb &&
-        (platform.isIOS || platform.isMacOS)) {
+        (platform.isIOS || platform.isMacOS || platform.isAndroid)) {
       integrations.add(LoadContextsIntegration(channel));
     }
 
