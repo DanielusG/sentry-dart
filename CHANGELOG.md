@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Dependencies
+
+- Bump Cocoa SDK from v8.25.2 to v8.31.1 ([#16](https://github.com/DanielusG/sentry-dart/pull/16))
+  - [changelog](https://github.com/getsentry/sentry-cocoa/blob/main/CHANGELOG.md#8311)
+  - [diff](https://github.com/getsentry/sentry-cocoa/compare/8.25.2...8.31.1)
+
 ## 8.2.0
 
 ### Enhancements
