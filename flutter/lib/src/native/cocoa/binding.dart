@@ -22996,8 +22996,6 @@ class SentryCocoa {
       _registerName1("prefersIncrementalDelivery");
   late final _sel_setPrefersIncrementalDelivery_1 =
       _registerName1("setPrefersIncrementalDelivery:");
-  late final _sel_getGraphQLOperationName1 =
-      _registerName1("getGraphQLOperationName");
   late final _sel_storeCookies_forTask_1 =
       _registerName1("storeCookies:forTask:");
   void _objc_msgSend_804(
@@ -30071,6 +30069,8 @@ class SentryCocoa {
       _registerName1("appStartMeasurementHybridSDKMode");
   late final _sel_setAppStartMeasurementHybridSDKMode_1 =
       _registerName1("setAppStartMeasurementHybridSDKMode:");
+  late final _sel_appStartMeasurementWithSpans1 =
+      _registerName1("appStartMeasurementWithSpans");
   late final _class_SentryUser1 = _getClass1("SentryUser");
   late final _sel_userWithDictionary_1 = _registerName1("userWithDictionary:");
   ffi.Pointer<ObjCObject> _objc_msgSend_1060(
@@ -30116,12 +30116,6 @@ class SentryCocoa {
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCObject>)>();
 
-  late final _sel_captureReplay1 = _registerName1("captureReplay");
-  late final _sel_getReplayId1 = _registerName1("getReplayId");
-  late final _sel_addReplayIgnoreClasses_1 =
-      _registerName1("addReplayIgnoreClasses:");
-  late final _sel_addReplayRedactClasses_1 =
-      _registerName1("addReplayRedactClasses:");
   late final _class_SentryCurrentDateProvider1 =
       _getClass1("SentryCurrentDateProvider");
   late final _sel_timezoneOffset1 = _registerName1("timezoneOffset");
@@ -37673,7 +37667,8 @@ class ObjCBlock_bool_ObjCObject_ffiUnsignedLong_bool extends _ObjCBlockBase {
   ObjCBlock_bool_ObjCObject_ffiUnsignedLong_bool.fromFunctionPointer(
       SentryCocoa lib,
       ffi.Pointer<
-              ffi.NativeFunction<
+              ffi
+              .NativeFunction<
                   ffi.Bool Function(ffi.Pointer<ObjCObject> arg0,
                       ffi.UnsignedLong arg1, ffi.Pointer<ffi.Bool> arg2)>>
           ptr)
@@ -42117,15 +42112,17 @@ class ObjCBlock_bool_ObjCObject_bool extends _ObjCBlockBase {
                       ffi.Pointer<ffi.Bool> arg1)>>
           ptr)
       : this._(
-            lib._newBlock1(
-                _cFuncTrampoline ??= ffi.Pointer.fromFunction<
-                            ffi.Bool Function(
-                                ffi.Pointer<_ObjCBlock> block,
-                                ffi.Pointer<ObjCObject> arg0,
-                                ffi.Pointer<ffi.Bool> arg1)>(
-                        _ObjCBlock_bool_ObjCObject_bool_fnPtrTrampoline, false)
-                    .cast(),
-                ptr.cast()),
+            lib
+                ._newBlock1(
+                    _cFuncTrampoline ??= ffi.Pointer.fromFunction<
+                                ffi.Bool Function(
+                                    ffi.Pointer<_ObjCBlock> block,
+                                    ffi.Pointer<ObjCObject> arg0,
+                                    ffi.Pointer<ffi.Bool> arg1)>(
+                            _ObjCBlock_bool_ObjCObject_bool_fnPtrTrampoline,
+                            false)
+                        .cast(),
+                    ptr.cast()),
             lib);
   static ffi.Pointer<ffi.Void>? _cFuncTrampoline;
 
@@ -58360,11 +58357,6 @@ class NSURLSessionTask extends NSObject {
     return NSURLSessionTask._(_ret, _lib, retain: false, release: true);
   }
 
-  NSString getGraphQLOperationName() {
-    final _ret = _lib._objc_msgSend_20(_id, _lib._sel_getGraphQLOperationName1);
-    return NSString._(_ret, _lib, retain: true, release: true);
-  }
-
   static NSURLSessionTask allocWithZone_(
       SentryCocoa _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_3(
@@ -70898,6 +70890,12 @@ class PrivateSentrySDKOnly extends NSObject {
         _lib._sel_setAppStartMeasurementHybridSDKMode_1, value);
   }
 
+  static NSDictionary appStartMeasurementWithSpans(SentryCocoa _lib) {
+    final _ret = _lib._objc_msgSend_170(_lib._class_PrivateSentrySDKOnly1,
+        _lib._sel_appStartMeasurementWithSpans1);
+    return NSDictionary._(_ret, _lib, retain: true, release: true);
+  }
+
   static SentryUser userWithDictionary_(
       SentryCocoa _lib, NSDictionary? dictionary) {
     final _ret = _lib._objc_msgSend_1060(_lib._class_PrivateSentrySDKOnly1,
@@ -70910,27 +70908,6 @@ class PrivateSentrySDKOnly extends NSObject {
     final _ret = _lib._objc_msgSend_1061(_lib._class_PrivateSentrySDKOnly1,
         _lib._sel_breadcrumbWithDictionary_1, dictionary?._id ?? ffi.nullptr);
     return SentryBreadcrumb._(_ret, _lib, retain: true, release: true);
-  }
-
-  static void captureReplay(SentryCocoa _lib) {
-    _lib._objc_msgSend_1(
-        _lib._class_PrivateSentrySDKOnly1, _lib._sel_captureReplay1);
-  }
-
-  static NSString getReplayId(SentryCocoa _lib) {
-    final _ret = _lib._objc_msgSend_20(
-        _lib._class_PrivateSentrySDKOnly1, _lib._sel_getReplayId1);
-    return NSString._(_ret, _lib, retain: true, release: true);
-  }
-
-  static void addReplayIgnoreClasses_(SentryCocoa _lib, NSArray? classes) {
-    _lib._objc_msgSend_441(_lib._class_PrivateSentrySDKOnly1,
-        _lib._sel_addReplayIgnoreClasses_1, classes?._id ?? ffi.nullptr);
-  }
-
-  static void addReplayRedactClasses_(SentryCocoa _lib, NSArray? classes) {
-    _lib._objc_msgSend_441(_lib._class_PrivateSentrySDKOnly1,
-        _lib._sel_addReplayRedactClasses_1, classes?._id ?? ffi.nullptr);
   }
 
   @override
@@ -71283,6 +71260,10 @@ class SentryCurrentDateProvider extends NSObject {
 
   int systemTime() {
     return _lib._objc_msgSend_1062(_id, _lib._sel_systemTime1);
+  }
+
+  double systemUptime() {
+    return _lib._objc_msgSend_155(_id, _lib._sel_systemUptime1);
   }
 
   @override
