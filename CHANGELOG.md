@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Dependencies
+
+- Bump Android SDK from v7.9.0 to v7.18.0 ([#40](https://github.com/DanielusG/sentry-dart/pull/40))
+  - [changelog](https://github.com/getsentry/sentry-java/blob/main/CHANGELOG.md#7180)
+  - [diff](https://github.com/getsentry/sentry-java/compare/7.9.0...7.18.0)
+
 ## 8.2.0
 
 ### Enhancements
